@@ -7,12 +7,12 @@ function ImageUpload() {
   const [photo, setPhoto] = useState("");
   const [url, setUrl] = useState("");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false); // Added loading state
+  const [loading, setLoading] = useState(false); 
 
   const navigate = useNavigate();
 
   const uploadImage = async () => {
-    setLoading(true); // Set loading to true when starting the upload
+    setLoading(true);
     const data = new FormData();
     data.append("file", image);
     data.append("upload_preset", "testImage");
@@ -38,7 +38,7 @@ function ImageUpload() {
     } catch (err) {
       console.log("Error:", err);
     } finally {
-      setLoading(false); // Set loading to false after the upload process
+      setLoading(false); 
     }
   };
 

@@ -8,7 +8,7 @@ function ImageGet() {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/photos');
+        const res = await axios.get('https://cloudinary-backend-3r6b.onrender.com/photos');
         setPhotos(res.data);
       } catch (err) {
         console.error(err);

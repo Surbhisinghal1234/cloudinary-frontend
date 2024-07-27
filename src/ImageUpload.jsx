@@ -29,7 +29,7 @@ function ImageUpload() {
       console.log("Image upload sucessfully");
       setUrl(cloudData.url);
 
-      await axios.post('http://localhost:3002/photos', { url: cloudData.url });
+      await axios.post('https://cloudinary-backend-3r6b.onrender.com/photos', { url: cloudData.url });
       setMessage('URL saved');
       console.log('Image URL', cloudData.url);
       navigate('/imageget');

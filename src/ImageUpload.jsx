@@ -1,16 +1,18 @@
 import { useState } from "react";
 import axios from 'axios';
-import {Link,Navigate, useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 function ImageUpload() {
   const [image, setImage] = useState("");
   const [photo, setPhoto] = useState("");
-  const navigate = useNavigate(); 
-
   const [url, setUrl] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Added loading state
+
+  const navigate = useNavigate();
 
   const uploadImage = async () => {
+    setLoading(true); // Set loading to true when starting the upload
     const data = new FormData();
     data.append("file", image);
     data.append("upload_preset", "testImage");
@@ -26,7 +28,7 @@ function ImageUpload() {
 
       const cloudData = await res.json();
       console.log(cloudData, "cloudData");
-      console.log("Image upload sucessfully");
+      console.log("Image uploaded successfully");
       setUrl(cloudData.url);
 
       await axios.post('https://cloudinary-backend-3r6b.onrender.com/photos', { url: cloudData.url });
@@ -34,37 +36,47 @@ function ImageUpload() {
       console.log('Image URL', cloudData.url);
       navigate('/imageget');
     } catch (err) {
-      console.log( "err");
+      console.log("Error:", err);
+    } finally {
+      setLoading(false); // Set loading to false after the upload process
     }
   };
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setImage(file);
     setPhoto(URL.createObjectURL(file));
-
   };
+
   return (
     <>
-    <div className="bg-black text-white h-screen py-4 flex flex-col items-center gap-[2rem]" >
-
-    <h1 className="font-bold text-3xl" >Upload Image</h1>
-      <div className="  gap-[1rem] flex flex-col ">
-        <div>
-          <input type="file" className="rounded-md "  onChange={handleFileChange} />
-          {photo && (
-            <img
-              src={photo}
-              alt="Photo"
-              style={{ width: "100px", height: "100px" }}
+      <div className="bg-black text-white h-screen py-4 flex flex-col items-center gap-[2rem]">
+        <h1 className="font-bold text-3xl">Upload Image</h1>
+        <div className="gap-[1rem] flex flex-col">
+          <div>
+            <input
+              type="file"
+              className="rounded-md"
+              onChange={handleFileChange}
             />
-          )}
+            {photo && (
+              <img
+                src={photo}
+                alt="Photo"
+                style={{ width: "100px", height: "100px" }}
+              />
+            )}
+          </div>
+          <button
+            className={`bg-green-800 text-white rounded-md py-2 font-bold text-xl px-6 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={uploadImage}
+            disabled={loading} 
+          >
+            {loading ? 'Uploading...' : 'Send'} 
+          </button>
+          <p>{message}</p>
         </div>
-        <button className="bg-green-800 text-white rounded-md py-2 font-bold text-xl px-6"  onClick={uploadImage} >Send</button>
-        <p>{message}</p>
-
       </div>
-      </div>
-
     </>
   );
 }
